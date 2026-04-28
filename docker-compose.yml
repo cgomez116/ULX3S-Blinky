@@ -1,0 +1,16 @@
+services:
+  fpga-dev:
+    build: .
+    container_name: ulx3s-dev
+    volumes:
+      - .:/workspace
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    working_dir: /workspace
+    environment:
+      - DISPLAY=${DISPLAY}
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    command: /bin/bash

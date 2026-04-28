@@ -18,15 +18,12 @@ module top(input clk_25mhz,
 `endif
 
     localparam ctr_width = 32;
-/* verilator lint_off PROCASSINIT */
     reg [ctr_width-1:0] ctr = 0;
-/* verilator lint_on PROCASSINIT */
 
     always @(posedge i_clk) begin
                ctr <= ctr + 1;
-          o_led[7] <= 1;
-          o_led[6] <= btn[1];
+          o_led[6] <= 1;
+          o_led[7] <= btn[1];
         o_led[5:0] <= ctr[23:18];
     end
-
 endmodule
