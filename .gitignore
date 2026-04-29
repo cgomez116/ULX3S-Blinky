@@ -1,0 +1,12 @@
+# Blinky generated build artifacts
+blinky
+blinky.vcd
+blinky.json
+obj_dir/
+ulx3s.bit
+ulx3s_out.config
+
+# Local editor / OS files
+.DS_Store
+*.swp
+*~
