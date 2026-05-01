@@ -1,10 +1,23 @@
-# Blinky generated build artifacts
-blinky
-blinky.vcd
-blinky.json
+# Verilator simulation build artifacts
 obj_dir/
-ulx3s.bit
-ulx3s_out.config
+*.vcd
+
+# Yosys synthesis artifacts
+*.ys
+*.json
+
+# nextpnr place-and-route output
+*.config
+
+# Bitstream files
+*.bit
+
+# Verilator/C++ simulation binaries
+blinky
+
+# TestPattern simulation output
+image.ppm
+*.ppm
 
 # Local editor / OS files
 .DS_Store
