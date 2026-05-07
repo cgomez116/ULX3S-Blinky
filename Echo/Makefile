@@ -16,7 +16,7 @@ ulx3s.bit: ulx3s_out.config
 	ecppack ulx3s_out.config ulx3s.bit
 
 ulx3s_out.config: echo.json
-	nextpnr-ecp5 --45k --json echo.json \
+	nextpnr-ecp5 --85k --json echo.json \
 		--lpf ulx3s_v20.lpf \
 		--package CABGA381 \
 		--textcfg ulx3s_out.config 

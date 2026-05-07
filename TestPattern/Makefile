@@ -46,6 +46,6 @@ ULX3S_45F.json: ULX3S_45F.ys
 	$(YOSYS) -q ULX3S_45F.ys
 
 ulx3s_45f_ULX3S_45F.config: ULX3S_45F.json
-	$(NEXTPNR) --45k --json ULX3S_45F.json --lpf ulx3s_v20_segpdi.lpf \
+	$(NEXTPNR) --85k --json ULX3S_45F.json --lpf ulx3s_v20_segpdi.lpf \
 	--package CABGA381 \
 	--textcfg ulx3s_45f_ULX3S_45F.config

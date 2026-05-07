@@ -1,4 +1,15 @@
 ##
+## Simulation Rules
+##
+.PHONY: simulate
+simulate: obj_dir/Vvgatestsrc
+	obj_dir/Vvgatestsrc
+
+obj_dir/Vvgatestsrc: vgatestsrc.v vgatestsrc_tb.cpp
+	verilator -GBITS_PER_COLOR=8 -cc --exe --trace --build -j \
+		vgatestsrc.v vgatestsrc_tb.cpp
+
+##
 ## ULX3S Rules
 ##
 YOSYS=yosys
@@ -25,7 +36,7 @@ ULX3S.json: ULX3S.ys
 	$(YOSYS) -q ULX3S.ys
 
 ulx3s.config: ULX3S.json
-	$(NEXTPNR) --45k --json ULX3S.json --lpf ulx3s_v20_segpdi.lpf \
+	$(NEXTPNR) --85k --json ULX3S.json --lpf ulx3s_v20_segpdi.lpf \
 		--package CABGA381 \
 		--textcfg ulx3s.config
 
@@ -33,4 +44,5 @@ ulx3s.config: ULX3S.json
 .PHONY: clean
 clean:
 	rm -rf obj_dir *.vcd
+	rm -f image.ppm
 	rm -f ULX3S.ys ULX3S.json ulx3s.config ulx3s.bit
