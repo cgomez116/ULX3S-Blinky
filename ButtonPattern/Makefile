@@ -5,9 +5,9 @@
 simulate: obj_dir/Vvgatestsrc
 	obj_dir/Vvgatestsrc
 
-obj_dir/Vvgatestsrc: vgatestsrc.v vgatestsrc_tb.cpp
+obj_dir/Vvgatestsrc: ../hdmi_common/vgatestsrc.v vgatestsrc_tb.cpp
 	verilator -GBITS_PER_COLOR=8 -cc --exe --trace --build -j \
-		vgatestsrc.v vgatestsrc_tb.cpp
+		../hdmi_common/vgatestsrc.v vgatestsrc_tb.cpp
 
 ##
 ## ULX3S Rules
@@ -15,8 +15,9 @@ obj_dir/Vvgatestsrc: vgatestsrc.v vgatestsrc_tb.cpp
 YOSYS=yosys
 NEXTPNR=nextpnr-ecp5
 ECPPACK=ecppack
-HDMICODE=llhdmi.v vgatestsrc.v
-ENCODER=TMDS_encoder.v
+HDMICODE=../hdmi_common/llhdmi.v ../hdmi_common/vgatestsrc.v
+ENCODER=../hdmi_common/TMDS_encoder.v
+SERIALIZER=../hdmi_common/tmds_serial.v
 
 .PHONY: bitstream
 bitstream: ulx3s.bit
@@ -25,10 +26,12 @@ ulx3s.bit: ulx3s.config
 	$(ECPPACK) --input ulx3s.config \
 		--bit ulx3s.bit
 
-ULX3S.ys: ULX3S.v $(HDMICODE) $(ENCODER) clock.v OBUFDS.v
+ULX3S.ys: ULX3S.v $(HDMICODE) $(ENCODER) $(SERIALIZER) \
+		../hdmi_common/clock.v ../hdmi_common/OBUFDS.v
 	chmod +x ysgen.sh
-	./ysgen.sh ULX3S.v $(HDMICODE) $(ENCODER) clock.v \
-		OBUFDS.v > ULX3S.ys
+	./ysgen.sh ULX3S.v $(HDMICODE) $(ENCODER) $(SERIALIZER) \
+		../hdmi_common/clock.v \
+		../hdmi_common/OBUFDS.v > ULX3S.ys
 	echo "hierarchy -top ULX3S" >> ULX3S.ys
 	echo "synth_ecp5 -json ULX3S.json" >> ULX3S.ys
 

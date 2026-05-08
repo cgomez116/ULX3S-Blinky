@@ -73,46 +73,16 @@ module llhdmi(
   TMDS_encoder encode_B(.clk(i_pixclk), .VD(i_blu), .CD({vSync,hSync}),
                                         .VDE(DrawArea), .TMDS(TMDS_blu));
 
-  // Strobe the TMDS_shift_load once every 10 i_tmdsclks
-  // i.e. at the start of new pixel data
-  reg [3:0] TMDS_mod10;
-  reg TMDS_shift_load;
-  initial TMDS_mod10=0;
-  initial TMDS_shift_load=0;
-  
-  always @(posedge i_tmdsclk) begin
-    if (i_reset) begin
-      TMDS_mod10 <= 0;
-      TMDS_shift_load <= 0;
-    end else begin
-      TMDS_mod10 <= (TMDS_mod10==4'd9) ? 4'd0 : TMDS_mod10+4'd1;
-      TMDS_shift_load <= (TMDS_mod10==4'd9);
-    end
-  end
-
-  // Latch the TMDS colour values into three shift registers
-  // at the start of the pixel, then shift them one bit each i_tmdsclk.
-  // We will then output the LSB on each i_tmdsclk.
-  reg [9:0] TMDS_shift_red, TMDS_shift_grn, TMDS_shift_blu;
-  initial TMDS_shift_red=0;
-  initial TMDS_shift_grn=0;
-  initial TMDS_shift_blu=0;
-
-  always @(posedge i_tmdsclk) begin
-    if (i_reset) begin
-      TMDS_shift_red <= 0;
-      TMDS_shift_grn <= 0;
-      TMDS_shift_blu <= 0;
-    end else begin
-      TMDS_shift_red <= TMDS_shift_load ? TMDS_red: {1'b0, TMDS_shift_red[9:1]};
-      TMDS_shift_grn <= TMDS_shift_load ? TMDS_grn: {1'b0, TMDS_shift_grn[9:1]};
-      TMDS_shift_blu <= TMDS_shift_load ? TMDS_blu: {1'b0, TMDS_shift_blu[9:1]};
-    end
-  end
-
-  // Finally output the LSB of each color bitstream
-  assign o_red= TMDS_shift_red[0];
-  assign o_grn= TMDS_shift_grn[0];
-  assign o_blu= TMDS_shift_blu[0];
+  // Serialize the 10-bit TMDS words to 1-bit streams at 250 MHz
+  tmds_serial serializer(
+    .i_tmdsclk(i_tmdsclk),
+    .i_reset(i_reset),
+    .i_red(TMDS_red),
+    .i_grn(TMDS_grn),
+    .i_blu(TMDS_blu),
+    .o_red(o_red),
+    .o_grn(o_grn),
+    .o_blu(o_blu)
+  );
 
 endmodule

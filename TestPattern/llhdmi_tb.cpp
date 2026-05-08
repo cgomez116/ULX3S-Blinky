@@ -8,7 +8,7 @@
 #include <signal.h>
 #include "verilated.h"
 #include "Vllhdmi.h"
-#include "testb.h"
+#include "../testb.h"
 
 int	main(int argc, char **argv) {
 	Verilated::commandArgs(argc, argv);

@@ -5,6 +5,7 @@ all: obj_dir/Vecho
 obj_dir/Vecho: echo.v txuartlite.v rxuartlite.v uartsim.cpp uartsim.h \
 		echo_tb.cpp
 	verilator -cc --exe --trace --build -j \
+		-CFLAGS "-I.." \
 		echo.v txuartlite.v rxuartlite.v uartsim.cpp echo_tb.cpp
 
 .PHONY: clean
